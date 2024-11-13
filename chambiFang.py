@@ -25,13 +25,12 @@ accPerTurn = int(dataLoad.accPerTurn)
 ref_group_link = dataLoad.ref_group_link
 linkPicture = dataLoad.linkPicture
 colour_in_rgb = str(dataLoad.colour_in_rgb)
-
 api_url = "http://127.0.0.1:19995/api/v3/profiles/{action}/{id}"
 time.sleep(1)
 def run(x, i):
     setData1 = int(i)
     setData2 =int(x)
-    portProxy1 = setData2 + portProxy
+    portProxy1 = setData2 + portProxyFrom
     portProxy = str(portProxy1)
     linkCheckProxy = linkCheck + portProxy
     linkResetProxy = linkReset + portProxy
@@ -84,7 +83,7 @@ def run(x, i):
             else:
                 win_pos_value = f"{strline2},700"
             params = {
-                "win_scale": 0.5,
+                "win_scale": 0.45,
                 "win_pos": win_pos_value,
                 "win_size": "500,700"
             }
@@ -93,7 +92,6 @@ def run(x, i):
             if response.status_code == 200:
                 data = response.json()
                 success_value = data.get('success')
-                
                 driver_path = data['data']['driver_path']
                 remote_debugging_address = data['data']['remote_debugging_address']
                 chrome_options = webdriver.ChromeOptions()
@@ -177,7 +175,6 @@ def run(x, i):
                     element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//span[text()="Launch"]')))
                     driver.execute_script("arguments[0].click();", element)
                 except:pass
-                          
                 iframe = WebDriverWait(driver, 20).until(EC.frame_to_be_available_and_switch_to_it((By.XPATH, '//iframe[@class="payment-verification"]')))
                 try:
                     element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//button[text()="Go to Web version"]')))
@@ -194,7 +191,6 @@ def run(x, i):
                     iframe = WebDriverWait(driver, 20).until(EC.frame_to_be_available_and_switch_to_it((By.XPATH, '//iframe[@class="payment-verification"]')))
                     time.sleep(1)
                 except:pass
-
                 element = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, '//div[@id="root"]/div[1]/div[1]/div[1]/div[2]/div[2]/button[1]//*[@class="_button_img_17fy4_119"]')))
                 actions = ActionChains(driver)
                 actions.move_to_element(element).click().perform()
@@ -221,7 +217,6 @@ def run(x, i):
                 element = driver.find_element(By.XPATH, '//div[text()="Your balance"]')
                 driver.execute_script("arguments[0].scrollIntoView();", element)
                 time.sleep(2)
-
                 element = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, '//button[@class="_button_13oyr_11"]')))
                 actions = ActionChains(driver)
                 actions.move_to_element(element).click().perform()
@@ -232,7 +227,6 @@ def run(x, i):
                 break
             except:pass      
         time.sleep(5)
-       
         ####//////////////////////////////////////////////
         for logGamePaint in range(6):
             if logGamePaint == 5:
@@ -398,7 +392,6 @@ def main():
                 print(f"Turn bắt đầu từ acc: {fileExcelLoad.iloc[i, 0]}")
                 if len(idBeginturnacc) < 10:
                     break
-                
                 run_threads = []
                 for x in range(accPerTurn):
                     t_run = threading.Thread(target=run, args=(x, i))
@@ -406,7 +399,6 @@ def main():
                     t_run.start()
                 for t_run in run_threads:
                     t_run.join()
-
                 print(">>ĐÃ QUẤT XONG TURN ACC !!!")
                 print("Đang reset IP để chạy turn tiếp")
                 requests.get(linkresetAll)
@@ -419,4 +411,3 @@ def main():
             print(f'Đã xong lô acc...')
 if __name__ == "__main__":
     main()
-
